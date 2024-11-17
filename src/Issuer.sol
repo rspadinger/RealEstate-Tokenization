@@ -39,7 +39,10 @@ contract Issuer is FunctionsClient, FunctionsSource, OwnerIsCreator {
     if (s_lastRequestId != bytes32(0)) revert LatestIssueInProgress();
 
     FunctionsRequest.Request memory req;
+
+    //@note init FunctionsRequest with the getNftMetadata js function (in FunctionsSource.sol)
     req.initializeRequestForInlineJavaScript(this.getNftMetadata());
+    //send request with required input data => function returns IPFS string: ipfs://${ipfsCid}
     requestId = _sendRequest(req.encodeCBOR(), subscriptionId, gasLimit, donID);
 
     s_issuesInProgress[requestId] = FractionalizedNft(to, amount);
@@ -51,17 +54,20 @@ contract Issuer is FunctionsClient, FunctionsSource, OwnerIsCreator {
     s_lastRequestId = bytes32(0);
   }
 
+  //@note callback function => called by CL Functions when the request is fianlized
   function fulfillRequest(bytes32 requestId, bytes memory response, bytes memory err) internal override {
     if (err.length != 0) {
       revert(string(err));
     }
 
     if (s_lastRequestId == requestId) {
+      //get the IPFS string : ipfs://${ipfsCid}
       string memory tokenURI = string(response);
 
       uint256 tokenId = s_nextTokenId++;
       FractionalizedNft memory fractionalizedNft = s_issuesInProgress[requestId];
 
+      //mint the NFT
       i_realEstateToken.mint(fractionalizedNft.to, tokenId, fractionalizedNft.amount, '', tokenURI);
 
       s_lastRequestId = bytes32(0);

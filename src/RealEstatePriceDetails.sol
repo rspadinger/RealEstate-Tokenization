@@ -33,6 +33,7 @@ contract RealEstatePriceDetails is FunctionsClient, FunctionsSource, OwnerIsCrea
 
   constructor(address functionsRouterAddress) FunctionsClient(functionsRouterAddress) {}
 
+  //@note the automation forwarder is the addr provided by the CL Upkeep (which calls updatePriceDetails every 24h)
   function setAutomationForwarder(address automationForwarderAddress) external onlyOwner {
     s_automationForwarderAddress = automationForwarderAddress;
   }

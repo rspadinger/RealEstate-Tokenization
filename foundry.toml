@@ -9,9 +9,10 @@ evm_version = "paris"
 
 remappings = [
     '@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/',
-    '@chainlink/contracts-ccip/=lib/ccip/contracts/',
-    '@chainlink/contracts/=lib/chainlink/contracts/',    
-    '@chainlink/local/=lib/chainlink-local/',
+    '@chainlink/functions-toolkit/=lib/foundry-chainlink-toolkit',
+    '@chainlink/contracts/=node_modules/@chainlink/contracts',
+    '@chainlink/contracts-ccip/=node_modules/@chainlink/contracts-ccip',
+    '@chainlink/local=node_modules/@chainlink/local'    
 ]
 
 [rpc_endpoints]
